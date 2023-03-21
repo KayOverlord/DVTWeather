@@ -1,37 +1,26 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {getCurrentWeather, getWeatherForecast} from '../api/client';
+import {fetchCurrentWeather} from '../api';
 
 const HomeScreen = () => {
-  const [cityName, setCityName] = useState('London');
-  const [weatherData, setWeatherData] = useState(null);
-  const [forecastData, setForecastData] = useState(null);
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [weatherForecast, setWeatherForecast] = useState(null);
 
-  const handleGetCurrentWeather = async () => {
-    try {
-      const {data} = await getCurrentWeather(cityName);
-      setWeatherData(data.weather);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const latitude = 37.785834;
+  const longitude = -122.406417;
 
-  const handleGetWeatherForecast = async () => {
-    try {
-      const {data} = await getWeatherForecast(cityName);
-      setForecastData(data.forecast);
-    } catch (error) {
-      console.error(error);
-    }
+  const getCurrentWeather = async () => {
+    const data = await fetchCurrentWeather(latitude, longitude);
+    setCurrentWeather(data);
   };
 
   useEffect(() => {
-    handleGetCurrentWeather();
+    getCurrentWeather();
   }, []);
 
   return (
     <View>
-      <Text>{weatherData}</Text>
+      <Text>HOME</Text>
     </View>
   );
 };

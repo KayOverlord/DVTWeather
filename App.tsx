@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './src/screens/HomeScreen';
 import FavouriteScreen from './src/screens/FavouriteScreen';
 import LocationScreen from './src/screens/LocationScreen';
-import {useColorScheme} from 'react-native/Libraries/Utilities/Appearance';
+import {useColorScheme} from 'react-native';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -27,16 +27,16 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
-          name="Main"
+          name="Home"
           component={HomeScreen}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="Stats"
+          name="Favourite"
           component={FavouriteScreen}
           options={{
             headerShown: true,
@@ -46,7 +46,7 @@ const App = () => {
           }}
         />
         <Stack.Screen
-          name="Stats"
+          name="Location"
           component={LocationScreen}
           options={{
             headerShown: true,
