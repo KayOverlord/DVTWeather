@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './src/screens/HomeScreen';
 import FavouriteScreen from './src/screens/FavouriteScreen';
 import LocationScreen from './src/screens/LocationScreen';
-import {useColorScheme} from 'react-native';
+import {useColorScheme, PermissionsAndroid} from 'react-native';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -24,6 +24,34 @@ const App = () => {
   const TitleStyle = {
     color: isDarkMode ? '#003049' : '#fff',
   };
+
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'DVTWeather Location Permission',
+          message:
+            'DVTWeather App needs access to your location ' +
+            'so we can provide you with accurate weather information',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use my location');
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  useEffect(() => {
+    requestCameraPermission();
+  }, []);
 
   return (
     <NavigationContainer>

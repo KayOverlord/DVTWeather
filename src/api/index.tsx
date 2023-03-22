@@ -4,13 +4,14 @@ import {API_KEY} from '@env';
 const baseURL = 'https://api.openweathermap.org/data/2.5/';
 const apiKey = `${API_KEY}`;
 
-export const fetchCurrentWeather = async (lat: any, lon: any) => {
+export const fetchCurrentWeather = async (lat: number, lon: number) => {
   try {
     const response = await axios.get(baseURL + '/weather', {
       params: {
         lat: lat,
         lon: lon,
         appid: apiKey,
+        units: 'metric',
       },
     });
     return response.data;
@@ -20,13 +21,14 @@ export const fetchCurrentWeather = async (lat: any, lon: any) => {
   }
 };
 
-export const fetchWeatherForecast = async (lat: string, lon: string) => {
+export const fetchWeatherForecast = async (lat: number, lon: number) => {
   try {
     const response = await axios.get(baseURL + `/forecast`, {
       params: {
         lat: lat,
         lon: lon,
         appid: apiKey,
+        units: 'metric',
       },
     });
     return response.data;
