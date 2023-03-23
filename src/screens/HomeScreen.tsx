@@ -1,13 +1,20 @@
-import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {fetchCurrentWeather, fetchWeatherForecast} from '../api';
 import Geolocation from '@react-native-community/geolocation';
 import {Weather} from '../types';
-import {Forcast} from '../types/forcast';
 
 const HomeScreen = () => {
   const [currentWeather, setCurrentWeather] = useState<Weather>();
-  const [weatherForecast, setWeatherForecast] = useState<Forcast>();
+  const [weatherForecast, setWeatherForecast] =
+    useState<{day: string; temp: any; icon: string}[]>();
   const [conditions, setConditions] = useState('01d');
   const [mood, setMood] = useState({
     bg: require('../assets/Images/forest_cloudy.png'),
@@ -24,11 +31,41 @@ const HomeScreen = () => {
         info.coords.latitude,
         info.coords.longitude,
       );
-      setWeatherForecast(forcast);
+
       setCurrentWeather(data);
 
       getCondition(data.weather[0].id, data.weather[0].icon);
-      //console.log(forcast.list);
+      const groupedData: {day: string; temp: any; icon: string}[] = [];
+      forcast.list.forEach(
+        (item: {
+          dt_txt: string;
+          main: {temp_max: any};
+          weather: {icon: any}[];
+        }) => {
+          const date = item.dt_txt.slice(0, 10);
+          const time = item.dt_txt.slice(11, 19);
+          if (time === '12:00:00') {
+            const day = new Date(date);
+            const daysOfWeek = [
+              'Sunday',
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+            ];
+            const dayOfWeek = daysOfWeek[day.getDay()];
+
+            groupedData.push({
+              day: dayOfWeek,
+              temp: Math.floor(item.main.temp_max),
+              icon: item.weather[0].icon,
+            });
+          }
+          setWeatherForecast(groupedData);
+        },
+      );
     });
 
     return () => sub;
@@ -63,7 +100,7 @@ const HomeScreen = () => {
         resizeMode="stretch"
         style={{...styles.head, backgroundColor: mood.color}}>
         <Text style={styles.temp}>
-          {Math.round(currentWeather?.main.temp!!)}°
+          {Math.floor(currentWeather?.main.temp!!)}°
         </Text>
         <Text style={styles.temp_sub}>
           {currentWeather?.weather[0]?.description}
@@ -72,26 +109,35 @@ const HomeScreen = () => {
 
       <View style={{...styles.body, backgroundColor: mood.color}}>
         <View style={styles.body_temp}>
-          <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
-            {currentWeather?.main.temp_min!!}°{'\n'}Min
+          <Text style={styles.body_text}>
+            {Math.floor(currentWeather?.main.temp_min!!)}°{'\n'}Min
           </Text>
-          <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
-            {Math.round(currentWeather?.main.temp!!)}°{'\n'}Current
+          <Text style={styles.body_text}>
+            {Math.floor(currentWeather?.main.temp!!)}°{'\n'}Current
           </Text>
-          <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
-            {currentWeather?.main.temp_max!!}°{'\n'}Max
+          <Text style={styles.body_text}>
+            {Math.ceil(currentWeather?.main.temp_max!!)}°{'\n'}Max
           </Text>
         </View>
         <View>
-          {weatherForecast?.list?.map(v => {
-            //const date = new Date(item.dt * 1000);
-            //const dayOfWeek = daysOfWeek[date.getDay()];
-            return (
-              <Text style={{textAlign: 'center'}} key={v.dt_txt}>
-                {v?.weather[0]?.description!!}
-              </Text>
-            );
-          })}
+          <FlatList
+            data={weatherForecast}
+            renderItem={({item}) => {
+              return (
+                <View style={styles.forecast_list}>
+                  <Text style={styles.forecast_text}>{item.day}</Text>
+                  <Image
+                    source={{
+                      uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
+                    }}
+                    style={{width: 50, height: 50}}
+                  />
+                  <Text style={styles.forecast_text}>{item.temp}°</Text>
+                </View>
+              );
+            }}
+            keyExtractor={item => item.day}
+          />
         </View>
       </View>
     </View>
@@ -137,5 +183,22 @@ const styles = StyleSheet.create({
     borderBottomColor: '#fff',
     borderTopColor: 'transparent',
     borderWidth: 1,
+  },
+  body_text: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  forecast_list: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    flexDirection: 'row',
+    padding: 10,
+  },
+  forecast_text: {
+    textAlign: 'center',
+    fontSize: 17,
   },
 });
