@@ -20,6 +20,15 @@ const HomeScreen = () => {
     bg: require('../assets/Images/forest_cloudy.png'),
     color: '#547174',
   });
+  const daysOfWeek = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
 
   useEffect(() => {
     const sub = Geolocation.getCurrentPosition(async info => {
@@ -46,15 +55,7 @@ const HomeScreen = () => {
           const time = item.dt_txt.slice(11, 19);
           if (time === '12:00:00') {
             const day = new Date(date);
-            const daysOfWeek = [
-              'Sunday',
-              'Monday',
-              'Tuesday',
-              'Wednesday',
-              'Thursday',
-              'Friday',
-              'Saturday',
-            ];
+
             const dayOfWeek = daysOfWeek[day.getDay()];
 
             groupedData.push({
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   head: {
-    flex: 2,
+    flex: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
