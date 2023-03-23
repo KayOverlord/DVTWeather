@@ -125,14 +125,20 @@ const HomeScreen = () => {
             renderItem={({item}) => {
               return (
                 <View style={styles.forecast_list}>
-                  <Text style={styles.forecast_text}>{item.day}</Text>
-                  <Image
-                    source={{
-                      uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
-                    }}
-                    style={{width: 50, height: 50}}
-                  />
-                  <Text style={styles.forecast_text}>{item.temp}°</Text>
+                  <View style={styles.forecast_day_view}>
+                    <Text style={styles.forecast_text}>{item.day}</Text>
+                  </View>
+                  <View style={styles.forecast_image_view}>
+                    <Image
+                      source={{
+                        uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
+                      }}
+                      style={{width: 50, height: 50}}
+                    />
+                  </View>
+                  <View style={styles.forecast_temp_view}>
+                    <Text style={styles.forecast_text}>{item.temp}°</Text>
+                  </View>
                 </View>
               );
             }}
@@ -196,6 +202,27 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     padding: 10,
+  },
+  forecast_day_view: {
+    width: 90,
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  forecast_image_view: {
+    width: 100,
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  forecast_temp_view: {
+    width: 90,
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   forecast_text: {
     textAlign: 'center',
