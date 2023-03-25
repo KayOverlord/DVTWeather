@@ -1,7 +1,7 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
 import {useMain} from '../hooks/mainContext';
+import Toast from 'react-native-toast-message';
 
 const FavouriteScreen = () => {
   const {themeColor, favourites, removeFavourite} = useMain();
@@ -11,7 +11,16 @@ const FavouriteScreen = () => {
       {favourites.map((favorite, index) => (
         <View style={styles.box} key={index}>
           <Text style={styles.name}>{favorite}</Text>
-          <Button title="Remove" onPress={() => removeFavourite(index)} />
+          <Button
+            title="Remove"
+            onPress={() => {
+              removeFavourite(index);
+              Toast.show({
+                type: 'success',
+                text1: 'Location Removed from Favourite 👋',
+              });
+            }}
+          />
         </View>
       ))}
     </View>

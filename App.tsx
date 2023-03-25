@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {PermissionsAndroid} from 'react-native';
-
+import Toast from 'react-native-toast-message';
 import DrawerLayout from './src/components/DrawerLayout';
 import {MainProvider} from './src/hooks/mainContext';
 
@@ -39,6 +39,7 @@ const App = () => {
       <NavigationContainer>
         <DrawerLayout />
       </NavigationContainer>
+      <Toast />
     </MainProvider>
   );
 };

@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Button,
   FlatList,
   Image,
@@ -7,23 +8,16 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {fetchCurrentWeather, fetchWeatherForecast} from '../api';
 import Geolocation from '@react-native-community/geolocation';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {RootStackParamList, Weather} from '../types';
+import {Weather} from '../types';
 import {useMain} from '../hooks/mainContext';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import Toast from 'react-native-toast-message';
 
-type ScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'Home'>;
-
-interface Props {
-  navigation: ScreenNavigationProp;
-}
-
-const HomeScreen = ({navigation}: Props) => {
-  const {setThemeColor, favourites, removeFavourite, addFavourite} = useMain();
-
+const HomeScreen = ({navigation}: any) => {
+  const {setThemeColor, addFavourite} = useMain();
+  const [loading, setLoading] = useState(true);
   const [currentWeather, setCurrentWeather] = useState<Weather>();
   const [weatherForecast, setWeatherForecast] =
     useState<{day: string; temp: any; icon: string}[]>();
@@ -84,19 +78,26 @@ const HomeScreen = ({navigation}: Props) => {
     return () => sub;
   }, []);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Button
-          title="Add to Favourite"
-          onPress={() => {
-            addFavourite(currentWeather?.name!!);
-            console.log('Added to Favourite clicked');
-          }}
-        />
-      ),
-    });
-  }, [navigation]);
+  useEffect(() => {
+    if (currentWeather?.name) {
+      setLoading(false);
+      navigation.setOptions({
+        headerRight: () => (
+          <Button
+            title="Add to Favourite"
+            onPress={() => {
+              addFavourite(currentWeather?.name!!);
+
+              Toast.show({
+                type: 'success',
+                text1: 'Location Added to Favourite 👋',
+              });
+            }}
+          />
+        ),
+      });
+    }
+  }, [navigation, currentWeather?.name]);
 
   const getCondition = (id: number, icon: string) => {
     if (id <= 622) {
@@ -119,6 +120,10 @@ const HomeScreen = ({navigation}: Props) => {
       return;
     }
   };
+
+  if (loading) {
+    return <ActivityIndicator style={styles.container} size={80} />;
+  }
 
   return (
     <View style={styles.container}>
@@ -186,6 +191,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#547174',
   },
   head: {
     flex: 1.5,

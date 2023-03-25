@@ -39,13 +39,15 @@ export const MainProvider = ({children}: MainProviderProps) => {
   };
 
   const addFavourite = (location: string) => {
-    const newFavourites = [...favourites, location];
-    const checkLocation = favourites.includes(location!!);
-    if (!checkLocation)
-      AsyncStorage.setItem(
-        FAVOURITES_STORAGE_KEY,
-        JSON.stringify(newFavourites),
-      ).catch(error => console.log(error));
+    let newFavourites = [...favourites];
+    if (location !== null && location !== undefined)
+      newFavourites = [...favourites, location];
+
+    console.log(newFavourites);
+    AsyncStorage.setItem(
+      FAVOURITES_STORAGE_KEY,
+      JSON.stringify(newFavourites),
+    ).catch(error => console.log(error));
   };
 
   const value = {
