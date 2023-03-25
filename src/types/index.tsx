@@ -43,3 +43,15 @@ export interface Sys {
   sunrise: number;
   sunset: number;
 }
+
+export interface MainContextType {
+  themeColor: string;
+  setThemeColor: React.Dispatch<React.SetStateAction<string>>;
+  favourites: string[];
+  removeFavourite: (arg0: number) => void;
+  addFavourite: (arg0: string) => void;
+}
+
+export interface MainProviderProps {
+  children: React.ReactNode;
+}

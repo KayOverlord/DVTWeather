@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {PermissionsAndroid} from 'react-native';
 
 import DrawerLayout from './src/components/DrawerLayout';
+import {MainProvider} from './src/hooks/mainContext';
 
 const App = () => {
   const requestCameraPermission = async () => {
@@ -34,9 +35,11 @@ const App = () => {
   }, []);
 
   return (
-    <NavigationContainer>
-      <DrawerLayout />
-    </NavigationContainer>
+    <MainProvider>
+      <NavigationContainer>
+        <DrawerLayout />
+      </NavigationContainer>
+    </MainProvider>
   );
 };
 

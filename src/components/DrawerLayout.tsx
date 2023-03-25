@@ -2,18 +2,29 @@ import React, {useEffect} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import HomeScreen from '../screens/HomeScreen';
 import FavouriteScreen from '../screens/FavouriteScreen';
+import {useMain} from '../hooks/mainContext';
 
 const Drawer = createDrawerNavigator();
 const DrawerLayout = () => {
+  const {themeColor} = useMain();
+  const textColor = '#fff';
   const HeaderStyle = {
-    backgroundColor: '#0000000',
+    backgroundColor: themeColor,
   };
 
   const TitleStyle = {
-    color: '#fff',
+    color: textColor,
   };
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      screenOptions={{
+        drawerStyle: {
+          backgroundColor: themeColor,
+        },
+        drawerLabelStyle: {
+          color: textColor,
+        },
+      }}>
       <Drawer.Screen
         name="Home"
         component={HomeScreen}
@@ -22,6 +33,7 @@ const DrawerLayout = () => {
           headerTitle: '',
           headerStyle: HeaderStyle,
           headerTitleStyle: TitleStyle,
+          headerTintColor: textColor,
         }}
       />
       <Drawer.Screen
@@ -29,9 +41,10 @@ const DrawerLayout = () => {
         component={FavouriteScreen}
         options={{
           headerShown: true,
-          headerTitle: 'FavouriteScreen',
+          headerTitle: 'Favourite Locations',
           headerStyle: HeaderStyle,
           headerTitleStyle: TitleStyle,
+          headerTintColor: textColor,
         }}
       />
     </Drawer.Navigator>

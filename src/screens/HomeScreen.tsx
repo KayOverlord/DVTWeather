@@ -1,4 +1,5 @@
 import {
+  Button,
   FlatList,
   Image,
   ImageBackground,
@@ -9,13 +10,17 @@ import {
 import React, {useEffect, useState} from 'react';
 import {fetchCurrentWeather, fetchWeatherForecast} from '../api';
 import Geolocation from '@react-native-community/geolocation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Weather} from '../types';
+import {useMain} from '../hooks/mainContext';
 
 const HomeScreen = () => {
+  const {setThemeColor, favourites, removeFavourite, addFavourite} = useMain();
+
   const [currentWeather, setCurrentWeather] = useState<Weather>();
   const [weatherForecast, setWeatherForecast] =
     useState<{day: string; temp: any; icon: string}[]>();
-  const [conditions, setConditions] = useState('01d');
+
   const [mood, setMood] = useState({
     bg: require('../assets/Images/forest_cloudy.png'),
     color: '#547174',
@@ -68,7 +73,7 @@ const HomeScreen = () => {
         },
       );
     });
-
+    setThemeColor(mood.color);
     return () => sub;
   }, []);
 
@@ -78,19 +83,19 @@ const HomeScreen = () => {
         bg: require('../assets/Images/forest_rainy.png'),
         color: '#57575D',
       });
-      return setConditions(icon);
+      return;
     } else if (id == 800) {
       setMood({
         bg: require('../assets/Images/forest_sunny.png'),
         color: '#47AB2F',
       });
-      return setConditions(icon);
+      return;
     } else {
       setMood({
         bg: require('../assets/Images/forest_cloudy.png'),
         color: '#547174',
       });
-      return setConditions(icon);
+      return;
     }
   };
 
@@ -100,12 +105,18 @@ const HomeScreen = () => {
         source={mood.bg}
         resizeMode="stretch"
         style={{...styles.head, backgroundColor: mood.color}}>
-        <Text style={styles.temp}>
-          {Math.floor(currentWeather?.main.temp!!)}°
-        </Text>
-        <Text style={styles.temp_sub}>
-          {currentWeather?.weather[0]?.description}
-        </Text>
+        <View style={styles.main_temp}>
+          <Text style={styles.temp}>
+            {Math.floor(currentWeather?.main.temp!!)}°
+          </Text>
+          <Text style={styles.temp_sub}>
+            {currentWeather?.weather[0]?.description}
+          </Text>
+        </View>
+        <Button
+          title="Add to Favourite"
+          onPress={() => addFavourite(currentWeather?.name!!)}
+        />
       </ImageBackground>
 
       <View style={{...styles.body, backgroundColor: mood.color}}>
@@ -170,6 +181,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
+  },
+  main_temp: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingBottom: 35,
   },
   temp: {
     fontSize: 45,
