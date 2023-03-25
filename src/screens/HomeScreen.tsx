@@ -132,6 +132,7 @@ const HomeScreen = ({navigation}: any) => {
         resizeMode="stretch"
         style={{...styles.head, backgroundColor: mood.color}}>
         <View style={styles.main_temp}>
+          <Text style={styles.temp_title}>{currentWeather?.name}</Text>
           <Text style={styles.temp}>
             {Math.floor(currentWeather?.main.temp!!)}°
           </Text>
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
   },
   head: {
     flex: 1.5,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
   },
@@ -208,7 +209,11 @@ const styles = StyleSheet.create({
   main_temp: {
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingBottom: 35,
+    paddingTop: 20,
+  },
+  temp_title: {
+    fontSize: 45,
+    fontWeight: '100',
   },
   temp: {
     fontSize: 45,
@@ -216,7 +221,7 @@ const styles = StyleSheet.create({
   },
   temp_sub: {
     fontSize: 25,
-    fontWeight: 'bold',
+    fontWeight: '200',
   },
   body_temp: {
     display: 'flex',

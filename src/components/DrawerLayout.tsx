@@ -37,7 +37,7 @@ const DrawerLayout = () => {
         }}
       />
       <Drawer.Screen
-        name="Favourite"
+        name="Favourite Locations"
         component={FavouriteScreen}
         options={{
           headerShown: true,
