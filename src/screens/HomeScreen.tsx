@@ -11,10 +11,17 @@ import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {fetchCurrentWeather, fetchWeatherForecast} from '../api';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Weather} from '../types';
+import {RootStackParamList, Weather} from '../types';
 import {useMain} from '../hooks/mainContext';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-const HomeScreen = ({navigation}) => {
+type ScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+interface Props {
+  navigation: ScreenNavigationProp;
+}
+
+const HomeScreen = ({navigation}: Props) => {
   const {setThemeColor, favourites, removeFavourite, addFavourite} = useMain();
 
   const [currentWeather, setCurrentWeather] = useState<Weather>();

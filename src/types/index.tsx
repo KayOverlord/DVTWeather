@@ -55,3 +55,7 @@ export interface MainContextType {
 export interface MainProviderProps {
   children: React.ReactNode;
 }
+
+export type RootStackParamList = {
+  Home: {userId: string};
+};
