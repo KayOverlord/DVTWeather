@@ -21,7 +21,7 @@ const App = () => {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use my location');
+        //console.log('You can use my location');
       } else {
         console.log('Location permission denied');
       }

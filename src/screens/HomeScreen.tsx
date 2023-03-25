@@ -7,14 +7,14 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {fetchCurrentWeather, fetchWeatherForecast} from '../api';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Weather} from '../types';
 import {useMain} from '../hooks/mainContext';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   const {setThemeColor, favourites, removeFavourite, addFavourite} = useMain();
 
   const [currentWeather, setCurrentWeather] = useState<Weather>();
@@ -77,6 +77,20 @@ const HomeScreen = () => {
     return () => sub;
   }, []);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="Add to Favourite"
+          onPress={() => {
+            addFavourite(currentWeather?.name!!);
+            console.log('Added to Favourite clicked');
+          }}
+        />
+      ),
+    });
+  }, [navigation]);
+
   const getCondition = (id: number, icon: string) => {
     if (id <= 622) {
       setMood({
@@ -113,10 +127,6 @@ const HomeScreen = () => {
             {currentWeather?.weather[0]?.description}
           </Text>
         </View>
-        <Button
-          title="Add to Favourite"
-          onPress={() => addFavourite(currentWeather?.name!!)}
-        />
       </ImageBackground>
 
       <View style={{...styles.body, backgroundColor: mood.color}}>
